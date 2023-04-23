@@ -1,0 +1,5 @@
+flask
+flask_session
+flask_mysqldb
+boto3
+python-dotenv

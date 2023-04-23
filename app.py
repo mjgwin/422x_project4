@@ -31,10 +31,10 @@ import boto3
 import time
 import datetime
 import pymongo
+from flask_mysqldb import MySQL
 import exifread
 import json
 from dotenv import load_dotenv
-from PIL import Image
 
 load_dotenv()
 
@@ -42,6 +42,13 @@ app = Flask(__name__, static_url_path="")
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+app.config['MYSQL_HOST'] = os.getenv('DATABASE_URL')
+app.config['MYSQL_USER'] = os.getenv('DATABASE_USER')
+app.config['MYSQL_PASSWORD'] = os.getenv('DATABASE_PASSWORD')
+app.config['MYSQL_DB'] = 'project4database'
+
+mysql = MySQL(app)
 
 UPLOAD_FOLDER = os.path.join(app.root_path, 'media')
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
@@ -54,12 +61,6 @@ client = pymongo.MongoClient(os.getenv('MONGO_URI'))
 db = client['photogallery']
 photo_collection = db['photo_gallery_mongo_db']
 user_collection = db['user_db_photo_gallery']
-
-def resize_image(image_path: str, size: tuple[int, int]):
-    """Resize an image and save it to a new file."""
-    with Image.open(image_path) as image:
-        resized_image = image.resize(size)
-        resized_image.save(image_path)
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -107,10 +108,24 @@ def is_logged_in():
 def home_page():
     logged_in = is_logged_in()
 
-    response = photo_collection.find()
-    items = [item for item in response]
+    # Test
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM metadata;')
+    result = cursor.fetchall()
+    cursor.close()
 
-    return render_template('index.html', photos=items, logged_in=logged_in)
+    items = [item for item in result]
+
+    categories_list = dict()
+
+    for item in items:
+        if not item[2] in categories_list:
+            categories_list[item[2]] = []
+
+        categories_list[item[2]].append(item)
+
+    print('Render home')
+    return render_template('index.html', metadata=categories_list, logged_in=logged_in)
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_photo():
@@ -137,11 +152,6 @@ def add_photo():
             filenameWithPath = os.path.join(UPLOAD_FOLDER, filename)
             print(filenameWithPath)
             file.save(filenameWithPath)
-
-            # Resize
-            should_resize = isinstance(new_width, int) and isinstance(new_height, int)
-            if should_resize:
-                resize_image(filenameWithPath, (new_width, new_height))
 
             uploadedFileURL = s3uploading(filename, filenameWithPath)
             ExifData=getExifData(filenameWithPath)

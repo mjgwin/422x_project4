@@ -22,39 +22,21 @@
     <center><h2>Photo Gallery</h2>
     <br>
     <a href="/">Home</a> | <a href="/add">Add Photo</a> | {% if logged_in %}<a href="/logout">Logout</a>{% else %}<a href="/login">Login</a> | <a href="/signup">Sign Up</a>{% endif %}<br><br>
-<div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                        <div class="blog-grid-content">
-<form  method='get' action="/search">
-                            <input type="text" name="query" id="query" class="form-control" placeholder="Search photos">
-                        </div>
-                </div>
-            </div>
-        </div>
     </center>
         <div class="content-sm container">
             <div class="theme-portfolio">
-                <div id="portfolio-4-col-grid" class="cbp">
-                    {% for p in photos %}
-                    <div class="cbp-item idea web-design theme-portfolio-item-v2 theme-portfolio-item-xs">
-                        <div class="cbp-caption">
-                            <div class="cbp-caption-defaultWrap theme-portfolio-active-wrap">
-                                <img src="{{p.URL}}" alt="">
-                                <div class="theme-icons-wrap theme-portfolio-lightbox">
-                                    <a class="cbp-lightbox" href="{{p.URL}}" data-title="Portfolio">
-                                        <i class="theme-icons theme-icons-white-bg theme-icons-sm radius-3 icon-focus"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="theme-portfolio-title-heading">
-                            <h4 class="theme-portfolio-title"><a href="/{{p.PhotoID}}">{{p.Title}}</a></h4>
-                            <span class="theme-portfolio-subtitle">{{p.CreationTime}}</span>
-                        </div>
-                    </div>
-                    {% endfor %}
+                {% for section_id, section_items in metadata.items() %}
+                <div>
+                    <p>{{ section_id }}</p>
+                    <ul>
+                        {% for section_item in section_items %}
+                            <li>
+                                <a href="http://example.org">{{ section_item[3] }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>   
