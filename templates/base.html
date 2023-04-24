@@ -21,7 +21,7 @@
     <br>
     <center><h2>{% block title %}{% endblock %}</h2>
     <br>
-    <a href="/">Home</a> | <a href="/add">Add Photo</a> | {% if logged_in %}<a href="/logout">Logout</a>{% else %}<a href="/login">Login</a> | <a href="/signup">Sign Up</a>{% endif %}<br><br>
+    <a href="/">Home</a> | {% if logged_in %}<a href="/logout">Logout</a>{% else %}<a href="/login">Login</a> | <a href="/signup">Sign Up</a>{% endif %}<br><br>
     </center>
         <div class="content-sm container">
             <div class="theme-portfolio">

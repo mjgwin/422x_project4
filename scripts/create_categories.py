@@ -33,7 +33,7 @@ VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
 insert_item = f"""INSERT INTO items(
     SectionID,
     CategoryID,
-    ImageKey,
+    ImageUrl,
     Title,
     Description,
     Slot0,
@@ -91,7 +91,7 @@ for metadata_array in metadata_items.values():
 
 
 items = [
-    (FOR_SALE, CELL_PHONE, 'iphone14problack.jpg', 'iPhone 14 Space Gray 256GB', 'do NOT contact me with unsolicited services or offers', 'Apple', 'iPhone 14', 'Space Gray', '256GB', '8GB', 'Verizon', 'Used', '$300')
+    (FOR_SALE, CELL_PHONE, 'https://project-four-photo-storage.s3.amazonaws.com/iphone14problack.jpg', 'iPhone 14 Space Gray 256GB', 'do NOT contact me with unsolicited services or offers', 'Apple', 'iPhone 14', 'Space Gray', '256GB', '8GB', 'Verizon', 'Used', '$300')
 ]
 
 clear_items()

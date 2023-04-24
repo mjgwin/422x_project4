@@ -6,15 +6,31 @@
 
 {% block content %}
 <div>
-    {% for item in items %}
-        <div>
-            <p>
-                <a href="/{{ item[1] }}/{{ item[2] }}/{{ item[0] }}">{{ item[4] }}</a>
-            </p>
-        </div>
-    {% endfor %}
+    {% if logged_in %}
+    <a href="/create?sid={{ metadata[0] }}&cid={{ metadata[1] }}">
+        <button>Create Listing</button>
+    </a>
+    <br>
+    <br>
+    {% endif %}
     {% if items|length == 0 %}
     <p>No items to display</p>
+    {% else %}
+    <p>Items: {{ items|length }}</p>
+    <div style="display: grid; grid-template-columns: auto auto auto;">
+        {% for item in items %}
+        <div>
+            <a href="/{{ item[1] }}/{{ item[2] }}/{{ item[0] }}">
+                <img style="width: 350px; height: 250px; object-fit: contain;"
+                    src="{{ item[3] }}"
+                    onerror="this.src='https\://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg'" />
+                <p>
+                    {{ item[4] }}
+                </p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
     {% endif %}
 </div>
 {% endblock %}

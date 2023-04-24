@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Create Listing for {{ metadata[2] }} > {{ metadata[3] }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 md-margin-b-50">
+        <article class="blog-grid margin-b-30">
+            <div class="blog-grid-content">
+                <form method='post' action="/create?sid={{ metadata[0] }}&cid={{ metadata[1] }}" enctype="multipart/form-data">
+                    <br>
+                    <h2 class="blog-grid-title-sm">Post Details</h2>
+                    <input type="text" name="title" id="title" class="form-control" placeholder="Post Title" required>
+                    <br>
+                    <textarea name="description" id="description" class="form-control" rows="3"
+                        placeholder="Post Description"></textarea>
+                    <br>
+                    <h2 class="blog-grid-title-sm">Attributes</h2>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        {% for (i, item) in enumerate(metadata[4:]) %}
+                        <div>
+                            <input type="text" name="slot{{ i }}" id="slot{{ i }}" class="form-control" placeholder="{{ item }}" required />
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <br>
+                    <h2 class="blog-grid-title-sm">Upload Photo (optional)</h2>
+                    <input type="file" name="imagefile" id="imagefile" class="form-control">
+                    <br>
+                    <button type="submit" class="btn-base-bg btn-base-sm radius-3">
+                        Create</button>
+                </form>
+            </div>
+        </article>
+    </div>
+</div>
+{% endblock %}

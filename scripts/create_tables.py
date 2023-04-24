@@ -13,13 +13,15 @@ db = pymysql.connect(host=os.getenv('DATABASE_URL'), user = os.getenv('DATABASE_
 cursor = db.cursor()
 cursor.execute('CREATE DATABASE IF NOT EXISTS project4database;')
 cursor.execute('USE project4database;')
+cursor.execute('DROP TABLE IF EXISTS items;')
+cursor.execute('DROP TABLE IF EXISTS metadata;')
 cursor.connection.commit()
 
 create_items_table_query = """CREATE TABLE IF NOT EXISTS items(
     ItemID INT NOT NULL AUTO_INCREMENT,
     SectionID INT NOT NULL,
     CategoryID INT NOT NULL,
-    ImageKey TEXT NOT NULL,
+    ImageUrl TEXT NOT NULL,
     Title TEXT NOT NULL,
     Description TEXT NOT NULL,
     Slot0 TEXT NOT NULL,

@@ -23,17 +23,15 @@ SOFTWARE.
 '''
 
 #!flask/bin/python
+from typing import Union
 from flask import Flask, jsonify, abort, request, make_response, url_for, session
 from flask import render_template, redirect
 from flask_session import Session
 import os
 import boto3
-import time
-import datetime
 import pymongo
 from flask_mysqldb import MySQL
 import exifread
-import json
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -59,7 +57,6 @@ BUCKET_NAME="project-three-photo-storage"
 
 client = pymongo.MongoClient(os.getenv('MONGO_URI'))
 db = client['photogallery']
-photo_collection = db['photo_gallery_mongo_db']
 user_collection = db['user_db_photo_gallery']
 
 def allowed_file(filename):
@@ -74,6 +71,36 @@ def bad_request(error):
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
+
+def insert_into_items(values: tuple[Union[str, int], ...]):
+    insert_item = f"""INSERT INTO items(
+    SectionID,
+    CategoryID,
+    ImageUrl,
+    Title,
+    Description,
+    Slot0,
+    Slot1,
+    Slot2,
+    Slot3,
+    Slot4,
+    Slot5,
+    Slot6,
+    Slot7
+)
+VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+"""
+    cursor = mysql.connection.cursor()
+    try:
+        cursor.execute(insert_item, values)
+    except Exception as e:
+        print(f"Failed to insert into item, error: {str(e)}")
+        return
+    cursor.connection.commit()
+
+@app.context_processor
+def inject_enumerate():
+    return dict(enumerate=enumerate)
 
 def getExifData(path_name):
     with open(path_name, 'rb') as f:
@@ -136,7 +163,7 @@ def category_page(sectionID, categoryID):
     items = cursor.fetchall()
     cursor.close()
 
-    return render_template('items.html', section_name=section_name, category_name=category_name, items=items, logged_in=logged_in)
+    return render_template('items.html', metadata=metadata, section_name=section_name, category_name=category_name, items=items, logged_in=logged_in)
 
 def get_metadata(sectionID: int, categoryID: int):
     cursor = mysql.connection.cursor()
@@ -168,26 +195,29 @@ def item_page(sectionID, categoryID, itemID):
 
     return render_template('item.html', section_name=section_name, category_name=category_name, item=item, slots=slots, logged_in=logged_in)
 
-@app.route('/add', methods=['GET', 'POST'])
-def add_photo():
+@app.route('/create', methods=['GET', 'POST'])
+def create_item():
     if not is_logged_in():
         return redirect(url_for('login_page'))
 
-    if request.method == 'POST':    
-        uploadedFileURL=''
+    sid = request.args.get('sid')
+    cid = request.args.get('cid')
 
+    if sid is None or cid is None:
+        return redirect('/')
+
+    sid = int(sid)
+    cid = int(cid)
+
+    metadata = get_metadata(sid, cid)
+
+    if request.method == 'POST':    
         file = request.files['imagefile']
         title = request.form['title']
-        tags = request.form['tags']
         description = request.form['description']
-        new_width = request.form.get('newwidth', '').strip()
-        new_height = request.form.get('newheight', '').strip()
+        slots = [request.form[f'slot{i}'] for i in range(0, 8)]
 
-        if new_width != '':
-            new_width = int(new_width)
-        if new_height != '':
-            new_height = int(new_height)
-        
+        # Upload file if exists
         if file and allowed_file(file.filename):
             filename = file.filename
             filenameWithPath = os.path.join(UPLOAD_FOLDER, filename)
@@ -195,53 +225,26 @@ def add_photo():
             file.save(filenameWithPath)
 
             uploadedFileURL = s3uploading(filename, filenameWithPath)
-            ExifData=getExifData(filenameWithPath)
-            ts=time.time()
-            timestamp = datetime.datetime.\
-                        fromtimestamp(ts).\
-                        strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            uploadedFileURL = ''
+        
+        insert_into_items((cid, sid, uploadedFileURL, title, description, *slots))
 
-            photo_collection.insert_one(
-            {
-                    "PhotoID": int(ts*1000),
-                    "CreationTime": timestamp,
-                    "Title": title,
-                    "Description": description,
-                    "Tags": tags,
-                    "URL": uploadedFileURL,
-                    "ExifData": json.dumps(ExifData),
-                    "Username": session["username"]
-                }
-            )
-
-        return redirect('/')
+        # TODO redirect to item
+        return redirect(f'/{sid}/{cid}')
     else:
-        return render_template('form.html')
+        return render_template('create-item.html', metadata=metadata, logged_in=True)
 
-@app.route('/<int:photoID>', methods=['GET'])
-def view_photo(photoID):
-    logged_in = is_logged_in()
-
-    response = photo_collection.find_one({'PhotoID': photoID})
-
-    response['ExifData'] = response['ExifData'].replace('""', '"')
-    if response['ExifData'].startswith('"'):
-        response['ExifData'] = response['ExifData'][1:-1]
-
-    tags=response['Tags'].split(',')
-    exifdata=json.loads(response['ExifData'])
-
-    return render_template('photodetail.html', 
-            photo=response, tags=tags, exifdata=exifdata, logged_in=logged_in)
 
 @app.route('/search', methods=['GET'])
 def search_page():
     query = request.args.get('query', None)    
     
-    response = photo_collection.find({"$or": [{"Title": {"$regex": query, "$options" : "i"}}, {'Description': {"$regex": query, "$options" : "i"}}, {'Tags': {"$regex": query, "$options" : "i"}}]})
-    items = [item for item in response]
+    # response = photo_collection.find({"$or": [{"Title": {"$regex": query, "$options" : "i"}}, {'Description': {"$regex": query, "$options" : "i"}}, {'Tags': {"$regex": query, "$options" : "i"}}]})
+    items = [item for item in []]
 
     return render_template('search.html', photos=items, searchquery=query)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
