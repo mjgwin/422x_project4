@@ -22,6 +22,7 @@ create_items_table_query = """CREATE TABLE IF NOT EXISTS items(
     SectionID INT NOT NULL,
     CategoryID INT NOT NULL,
     ImageUrl TEXT NOT NULL,
+    PostedBy TEXT NOT NULL,
     Title TEXT NOT NULL,
     Description TEXT NOT NULL,
     Slot0 TEXT NOT NULL,

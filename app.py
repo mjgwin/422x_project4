@@ -77,6 +77,7 @@ def insert_into_items(values: tuple[Union[str, int], ...]):
     SectionID,
     CategoryID,
     ImageUrl,
+    PostedBy,
     Title,
     Description,
     Slot0,
@@ -88,7 +89,7 @@ def insert_into_items(values: tuple[Union[str, int], ...]):
     Slot6,
     Slot7
 )
-VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
 """
     cursor = mysql.connection.cursor()
     try:
@@ -130,6 +131,9 @@ def s3uploading(filename, filenameWithPath):
 
 def is_logged_in():
     return 'username' in session
+
+def get_username():
+    return session['username']
 
 @app.route('/', methods=['GET', 'POST'])
 def home_page():
@@ -189,7 +193,7 @@ def item_page(sectionID, categoryID, itemID):
     
     item = get_item(itemID)
 
-    item_slots = item[6:]
+    item_slots = item[7:]
     metadata_slots = metadata[4:]
     slots = list(zip(metadata_slots, item_slots))
 
@@ -228,7 +232,7 @@ def create_item():
         else:
             uploadedFileURL = ''
         
-        insert_into_items((cid, sid, uploadedFileURL, title, description, *slots))
+        insert_into_items((cid, sid, uploadedFileURL, get_username(), title, description, *slots))
 
         # TODO redirect to item
         return redirect(f'/{sid}/{cid}')

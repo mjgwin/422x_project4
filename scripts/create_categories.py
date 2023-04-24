@@ -34,6 +34,7 @@ insert_item = f"""INSERT INTO items(
     SectionID,
     CategoryID,
     ImageUrl,
+    PostedBy,
     Title,
     Description,
     Slot0,
@@ -45,7 +46,7 @@ insert_item = f"""INSERT INTO items(
     Slot6,
     Slot7
 )
-VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
 """
 
 def clear_metadata():
@@ -91,7 +92,7 @@ for metadata_array in metadata_items.values():
 
 
 items = [
-    (FOR_SALE, CELL_PHONE, 'https://project-four-photo-storage.s3.amazonaws.com/iphone14problack.jpg', 'iPhone 14 Space Gray 256GB', 'do NOT contact me with unsolicited services or offers', 'Apple', 'iPhone 14', 'Space Gray', '256GB', '8GB', 'Verizon', 'Used', '$300')
+    (FOR_SALE, CELL_PHONE, 'https://project-four-photo-storage.s3.amazonaws.com/iphone14problack.jpg', 'se422x', 'iPhone 14 Space Gray 256GB', 'do NOT contact me with unsolicited services or offers', 'Apple', 'iPhone 14', 'Space Gray', '256GB', '8GB', 'Verizon', 'Used', '$300')
 ]
 
 clear_items()
