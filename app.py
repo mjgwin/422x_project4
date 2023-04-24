@@ -108,24 +108,65 @@ def is_logged_in():
 def home_page():
     logged_in = is_logged_in()
 
-    # Test
     cursor = mysql.connection.cursor()
     cursor.execute('SELECT * FROM metadata;')
-    result = cursor.fetchall()
+    items = cursor.fetchall()
     cursor.close()
 
-    items = [item for item in result]
-
     categories_list = dict()
-
     for item in items:
         if not item[2] in categories_list:
             categories_list[item[2]] = []
 
         categories_list[item[2]].append(item)
 
-    print('Render home')
     return render_template('index.html', metadata=categories_list, logged_in=logged_in)
+
+@app.route('/<int:sectionID>/<int:categoryID>', methods=['GET'])
+def category_page(sectionID, categoryID):
+    logged_in = is_logged_in()
+
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM metadata WHERE SectionID=%s AND CategoryID=%s", (sectionID, categoryID))
+    metadata = cursor.fetchone()
+    section_name = metadata[2]
+    category_name = metadata[3]
+
+    cursor.execute("SELECT * FROM items WHERE SectionID=%s AND CategoryID=%s", (sectionID, categoryID))
+    items = cursor.fetchall()
+    cursor.close()
+
+    return render_template('items.html', section_name=section_name, category_name=category_name, items=items, logged_in=logged_in)
+
+def get_metadata(sectionID: int, categoryID: int):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM metadata WHERE SectionID=%s AND CategoryID=%s", (sectionID, categoryID))
+    metadata = cursor.fetchone()
+    cursor.close()
+    return metadata
+
+def get_item(itemID):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM items WHERE itemID=%s", (itemID,))
+    item = cursor.fetchone()
+    cursor.close()
+    return item
+
+@app.route('/<int:sectionID>/<int:categoryID>/<int:itemID>', methods=['GET'])
+def item_page(sectionID, categoryID, itemID):
+    logged_in = is_logged_in()
+
+    metadata = get_metadata(sectionID, categoryID)
+    section_name = metadata[2]
+    category_name = metadata[3]
+    
+    item = get_item(itemID)
+
+    item_slots = item[6:]
+    metadata_slots = metadata[4:]
+    slots = list(zip(metadata_slots, item_slots))
+
+    return render_template('item.html', section_name=section_name, category_name=category_name, item=item, slots=slots, logged_in=logged_in)
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_photo():

@@ -19,22 +19,17 @@
 <div class="wrapper">
     <div class="bg-color-sky-light">
     <br>
-    <center><h2>Photo Gallery</h2>
+    <center><h2>{{ section_name }} > {{ category_name }}</h2>
     <br>
     <a href="/">Home</a> | <a href="/add">Add Photo</a> | {% if logged_in %}<a href="/logout">Logout</a>{% else %}<a href="/login">Login</a> | <a href="/signup">Sign Up</a>{% endif %}<br><br>
     </center>
         <div class="content-sm container">
             <div class="theme-portfolio">
-                {% for section_id, section_items in metadata.items() %}
+                {% for item in items %}
                 <div>
-                    <p>{{ section_id }}</p>
-                    <ul>
-                        {% for section_item in section_items %}
-                            <li>
-                                <a href="/{{ section_item[0] }}/{{ section_item[1] }}">{{ section_item[3] }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                    <p>
+                        <a href="/{{ item[1] }}/{{ item[2] }}/{{ item[0] }}">{{ item[4] }}</a>
+                    </p>
                 </div>
                 {% endfor %}
             </div>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Photo Gallery</title>
+<title>Item</title>
 <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link href='https://fonts.googleapis.com/css?family=Roboto:100,400,700,500,300,300italic' rel='stylesheet' type='text/css'>
 <link href='https://fonts.googleapis.com/css?family=Droid+Serif:400,400italic,700,700italic' rel='stylesheet' type='text/css'>
@@ -19,24 +19,24 @@
 <div class="wrapper">
     <div class="bg-color-sky-light">
     <br>
-    <center><h2>Photo Gallery</h2>
+    <center><h2>{{ section_name }} > {{ category_name }}</h2>
     <br>
     <a href="/">Home</a> | <a href="/add">Add Photo</a> | {% if logged_in %}<a href="/logout">Logout</a>{% else %}<a href="/login">Login</a> | <a href="/signup">Sign Up</a>{% endif %}<br><br>
     </center>
         <div class="content-sm container">
             <div class="theme-portfolio">
-                {% for section_id, section_items in metadata.items() %}
                 <div>
-                    <p>{{ section_id }}</p>
+                    <h1>{{ item[4] }}</h1>
+                    <h2>Description:</h2>
+                    <p>
+                       {{ item[5] }}
+                    </p>
                     <ul>
-                        {% for section_item in section_items %}
-                            <li>
-                                <a href="/{{ section_item[0] }}/{{ section_item[1] }}">{{ section_item[3] }}</a>
-                            </li>
+                        {% for slot in slots %}
+                            <li><b>{{ slot[0] }}</b>: {{ slot[1] }}</li>
                         {% endfor %}
                     </ul>
                 </div>
-                {% endfor %}
             </div>
         </div>
     </div>   
