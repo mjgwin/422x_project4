@@ -91,7 +91,7 @@ for metadata_array in metadata_items.values():
 
 
 items = [
-    (FOR_SALE, CELL_PHONE, '', 'iPhone 14 Red 256GB', 'do NOT contact me with unsolicited services or offers', 'Apple', 'iPhone 14', 'Red', '256GB', '8GB', 'Verizon', 'Used', '$300')
+    (FOR_SALE, CELL_PHONE, 'iphone14problack.jpg', 'iPhone 14 Space Gray 256GB', 'do NOT contact me with unsolicited services or offers', 'Apple', 'iPhone 14', 'Space Gray', '256GB', '8GB', 'Verizon', 'Used', '$300')
 ]
 
 clear_items()

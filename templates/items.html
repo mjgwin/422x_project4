@@ -13,5 +13,8 @@
             </p>
         </div>
     {% endfor %}
+    {% if items|length == 0 %}
+    <p>No items to display</p>
+    {% endif %}
 </div>
 {% endblock %}

@@ -7,14 +7,21 @@
 {% block content %}
 <div>
     <h1>{{ item[4] }}</h1>
-    <h2>Description:</h2>
-    <p>
-       {{ item[5] }}
-    </p>
-    <ul>
-        {% for slot in slots %}
-            <li><b>{{ slot[0] }}</b>: {{ slot[1] }}</li>
-        {% endfor %}
-    </ul>
+    <div style="display: flex; flex-direction: row;">
+        <div style="display: flex; flex-direction: column; flex: 1;">
+            <img style="width: 400px; height: 300px; object-fit: contain;" src="https://project-four-photo-storage.s3.amazonaws.com/{{ item[3] }}" onerror="this.src='https\://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg'" />
+            <h2>Description:</h2>
+            <p>
+               {{ item[5] }}
+            </p>
+        </div>
+        <div style="display: flex; flex-direction: column; flex: 1;">
+            <ul>
+                {% for slot in slots %}
+                    <li><b>{{ slot[0] }}</b>: {{ slot[1] }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 </div>
 {% endblock %}
