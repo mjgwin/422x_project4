@@ -32,35 +32,35 @@ FURNITURE = '4'; FURNITURE_NAME = 'Furniture'
 
 # Housing
 HOUSING_NAME = 'Housing'
-HOUSE_SWAP = '0'; HOUSE_SWAP_NAME = 'House Swap'
-ROOMS_WANTED = '1'; ROOMS_WANTED_NAME = 'Rooms Wanted'
-COMMERCIAL = '2'; COMMERCIAL_NAME = 'Commercial'
-STORAGE = '3'; STORAGE_NAME = 'Storage'
-SUBLETS = '4'; SUBLETS_NAME = 'Sublets'
+HOUSE_SWAP = '5'; HOUSE_SWAP_NAME = 'House Swap'
+ROOMS_WANTED = '6'; ROOMS_WANTED_NAME = 'Rooms Wanted'
+COMMERCIAL = '7'; COMMERCIAL_NAME = 'Commercial'
+STORAGE = '8'; STORAGE_NAME = 'Storage'
+SUBLETS = '9'; SUBLETS_NAME = 'Sublets'
 
 # Services
 SERVICES_NAME = 'Services'
-AUTOMOTIVE = '0'; AUTOMOTIVE_NAME = 'Automotive'
-LESSONS_TUTORING = '1'; LESSONS_TUTORING_NAME = 'Lessons/Tutoring'
-TRANSPORTATION = '2'; TRANSPORTATION_NAME = 'Transportation'
-LANDSCAPING = '3'; LANDSCAPING_NAME = 'Landscaping'
-LEGAL = '4'; LEGAL_NAME = 'Legal'
+AUTOMOTIVE = '10'; AUTOMOTIVE_NAME = 'Automotive'
+LESSONS_TUTORING = '11'; LESSONS_TUTORING_NAME = 'Lessons/Tutoring'
+TRANSPORTATION = '12'; TRANSPORTATION_NAME = 'Transportation'
+LANDSCAPING = '13'; LANDSCAPING_NAME = 'Landscaping'
+LEGAL = '14'; LEGAL_NAME = 'Legal'
 
 # Jobs
 JOBS_NAME = 'Jobs'
-FINANCE = '0'; FINANCE_NAME = 'Finance'
-REAL_ESTATE = '1'; REAL_ESTATE_NAME = 'Real Estate'
-EDUCATION = '2'; EDUCATION_NAME = 'Education'
-SOFTWARE = '3'; SOFTWARE_NAME = 'Software'
-RETAIL = '4'; RETAIL_NAME = 'Retail'
+FINANCE = '15'; FINANCE_NAME = 'Finance'
+REAL_ESTATE = '16'; REAL_ESTATE_NAME = 'Real Estate'
+EDUCATION = '17'; EDUCATION_NAME = 'Education'
+SOFTWARE = '18'; SOFTWARE_NAME = 'Software'
+RETAIL = '19'; RETAIL_NAME = 'Retail'
 
 # Community
 COMMUNITY_NAME = 'Community'
-EVENTS = '0'; EVENTS_NAME = 'Events'
-LOST_FOUND = '1'; LOST_FOUND_NAME = 'Lost + Found'
-PETS = '2'; PETS_NAME = 'Pets'
-MUSICIANS = '3'; MUSICIANS_NAME = 'Musicians'
-VOLUNTEERS = '4'; VOLUNTEERS_NAME = 'Volunteers'
+EVENTS = '20'; EVENTS_NAME = 'Events'
+LOST_FOUND = '21'; LOST_FOUND_NAME = 'Lost + Found'
+PETS = '22'; PETS_NAME = 'Pets'
+MUSICIANS = '23'; MUSICIANS_NAME = 'Musicians'
+VOLUNTEERS = '24'; VOLUNTEERS_NAME = 'Volunteers'
 
 insert_metadata = f"""INSERT INTO metadata
 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);

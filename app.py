@@ -74,6 +74,11 @@ def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
 
+@app.context_processor
+def inject_enumerate():
+    return dict(enumerate=enumerate)
+
+
 def insert_into_items(values: tuple[Union[str, int], ...]):
     insert_item = f"""INSERT INTO items(
     SectionID,
@@ -100,11 +105,6 @@ VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         print(f"Failed to insert into item, error: {str(e)}")
         return
     cursor.connection.commit()
-
-
-@app.context_processor
-def inject_enumerate():
-    return dict(enumerate=enumerate)
 
 
 def s3uploading(filename, filenameWithPath):
@@ -138,17 +138,6 @@ def get_query_section_category():
     cid = int(cid)
 
     return sid, cid, None
-
-
-def get_query_item():
-    iid = request.args.get('iid')
-
-    if iid is None:
-        return -1, redirect('/')
-
-    iid = int(iid)
-
-    return iid, None
 
 
 def get_metadata(section_id: int, category_id: int):
@@ -194,31 +183,26 @@ def home_page():
     return render_template('index.html', metadata=categories_list, logged_in=logged_in)
 
 
-@app.route('/category', methods=['GET'])
-def category_page():
+@app.route('/<int:section_id>/<int:category_id>', methods=['GET'])
+def category_page(section_id: int, category_id: int):
     logged_in = is_logged_in()
 
-    sid, cid, err = get_query_section_category()
-    if err is not None:
-        return err
-
-    metadata = get_metadata(sid, cid)
+    metadata = get_metadata(section_id, category_id)
     section_name = metadata[2]
     category_name = metadata[3]
 
-    items = get_category_items(sid, cid)
+    items = get_category_items(section_id, category_id)
 
     return render_template('category.html', metadata=metadata, section_name=section_name, category_name=category_name,
                            items=items, logged_in=logged_in)
 
 
-@app.route('/item/<int:item_id>', methods=['GET'])
-def item_page(item_id: int):
+@app.route('/<int:section_id>/<int:category_id>/<int:item_id>', methods=['GET'])
+def item_page(section_id: int, category_id: int, item_id: int):
     logged_in = is_logged_in()
 
     item = get_item(item_id)
 
-    section_id, category_id = item[1], item[2]
     metadata = get_metadata(section_id, category_id)
     section_name = metadata[2]
     category_name = metadata[3]
@@ -262,18 +246,7 @@ def create_item():
         return redirect(f'/{sid}/{cid}')
     else:
         metadata = get_metadata(sid, cid)
-        return render_template('create-item.html', metadata=metadata, logged_in=True)
-
-
-@app.route('/search', methods=['GET'])
-def search_page():
-    query = request.args.get('query', None)
-
-    # response = photo_collection.find({"$or": [{"Title": {"$regex": query, "$options" : "i"}}, {'Description': {
-    # "$regex": query, "$options" : "i"}}, {'Tags': {"$regex": query, "$options" : "i"}}]})
-    items = [item for item in []]
-
-    return render_template('search.html', photos=items, searchquery=query)
+        return render_template('create.html', metadata=metadata, logged_in=True)
 
 
 @app.route('/login', methods=['GET', 'POST'])
