@@ -52,7 +52,7 @@ FINANCE = '0'; FINANCE_NAME = 'Finance'
 REAL_ESTATE = '1'; REAL_ESTATE_NAME = 'Real Estate'
 EDUCATION = '2'; EDUCATION_NAME = 'Education'
 SOFTWARE = '3'; SOFTWARE_NAME = 'Software'
-MISCELLANEOUS = '4'; MISCELLANEOUS_NAME = 'Miscellaneous'
+RETAIL = '4'; RETAIL_NAME = 'Retail'
 
 # Community
 COMMUNITY_NAME = 'Community'
@@ -134,11 +134,11 @@ metadata_items = {
         # Legal
     ],
     JOBS: [
-        # Finance
-        # Real Estate
-        # Education
-        (JOBS, SOFTWARE, JOBS_NAME, SOFTWARE_NAME, 'Company Name', 'Employment Type', 'Job Title', 'Compensation', 'Benefits', 'Skills/Languages', 'PTO', 'Clearances/Requirements'),
-        # Miscellaneous
+        (JOBS, FINANCE, JOBS_NAME, FINANCE_NAME, 'Employer Name', 'Employment Type', 'Job Title', 'Compensation', 'Address', 'Benefits', 'Responsibilities', 'Years Experience'),
+        (JOBS, REAL_ESTATE, JOBS_NAME, REAL_ESTATE_NAME, 'Employer Name', 'Employment Type', 'Job Title', 'Compensation', 'Address', 'Requirements', 'Benefits', 'Job Duties'),
+        (JOBS, EDUCATION, JOBS_NAME, EDUCATION_NAME, 'Employer Name', 'Employment Type', 'Job Title', 'Compensation', 'Grade/Age Range', 'Address', 'Qualifications', 'Website'),
+        (JOBS, SOFTWARE, JOBS_NAME, SOFTWARE_NAME, 'Employer Name', 'Employment Type', 'Job Title', 'Compensation', 'Benefits', 'Skills/Languages', 'PTO', 'Clearances/Requirements'),
+        (JOBS, RETAIL, JOBS_NAME, RETAIL_NAME, 'Employer Name', 'Employment Type', 'Job Title', 'Compensation', 'Address', 'Qualifications', 'Duties/Responsibilities', 'Application Link'),
     ],
     COMMUNITY: [
         (COMMUNITY, EVENTS, COMMUNITY_NAME, EVENTS_NAME, 'Address', 'Date', 'Type', 'Time', 'Adult Price', 'Child Price', 'Food/Drink', 'Venue'),
