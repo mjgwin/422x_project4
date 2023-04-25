@@ -56,6 +56,11 @@ MISCELLANEOUS = '4'; MISCELLANEOUS_NAME = 'Miscellaneous'
 
 # Community
 COMMUNITY_NAME = 'Community'
+EVENTS = '0'; EVENTS_NAME = 'Events'
+CONNECTIONS = '1'; CONNECTIONS_NAME = 'Connections'
+PETS = '2'; PETS_NAME = 'Pets'
+LOCALNEWS = '3'; LOCALNEWS_NAME = 'Local News'
+VOLUNTEERS = '4'; VOLUNTEERS_NAME = 'Volunteers'
 
 insert_metadata = f"""INSERT INTO metadata
 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
@@ -132,13 +137,13 @@ metadata_items = {
         # Finance
         # Real Estate
         # Education
-        (JOBS, SOFTWARE, JOBS_NAME, SOFTWARE_NAME, 'Company Name', 'Employment Type', 'Job Title', 'Compensation', 'Benefits', 'Skills/Languages', 'PTO', 'Clearances/Requirements')
+        (JOBS, SOFTWARE, JOBS_NAME, SOFTWARE_NAME, 'Company Name', 'Employment Type', 'Job Title', 'Compensation', 'Benefits', 'Skills/Languages', 'PTO', 'Clearances/Requirements'),
         # Miscellaneous
     ],
     COMMUNITY: [
-        # Events
+        (COMMUNITY, EVENTS, COMMUNITY_NAME, EVENTS_NAME, 'Address', 'Date', 'Type', 'Time', 'Adult Price', 'Child Price', 'Food/Drink', 'Venue'),
         # Connections
-        # Pets
+        (COMMUNITY, PETS, COMMUNITY_NAME, PETS_NAME, 'Animal', 'Age', 'Spayed/Neutered', 'Vaccinated', 'Color', 'Count', 'Good With Kids', 'Price'),
         # Local news
         # Volunteers
     ]
