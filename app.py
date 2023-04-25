@@ -1,4 +1,5 @@
-'''
+#!flask/bin/python
+"""
 MIT License
 
 Copyright (c) 2019 Arshdeep Bahga and Vijay Madisetti
@@ -20,9 +21,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-'''
+"""
 
-#!flask/bin/python
 from typing import Union
 from flask import Flask, jsonify, abort, request, make_response, url_for, session
 from flask import render_template, redirect
@@ -48,7 +48,7 @@ app.config['MYSQL_DB'] = 'project4database'
 mysql = MySQL(app)
 
 UPLOAD_FOLDER = os.path.join(app.root_path, 'media')
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 AWS_ACCESS_KEY=os.getenv('AWS_ACCESS_KEY')
 AWS_SECRET_KEY=os.getenv('AWS_SECRET_KEY')
 REGION="us-east-1"
@@ -58,9 +58,11 @@ client = pymongo.MongoClient(os.getenv('MONGO_URI'))
 db = client['photogallery']
 user_collection = db['user_db_photo_gallery']
 
+
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @app.errorhandler(400)
 def bad_request(error):
@@ -70,6 +72,7 @@ def bad_request(error):
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
+
 
 def insert_into_items(values: tuple[Union[str, int], ...]):
     insert_item = f"""INSERT INTO items(
@@ -98,6 +101,7 @@ VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         return
     cursor.connection.commit()
 
+
 @app.context_processor
 def inject_enumerate():
     return dict(enumerate=enumerate)
@@ -106,19 +110,22 @@ def inject_enumerate():
 def s3uploading(filename, filenameWithPath):
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY,
                             aws_secret_access_key=AWS_SECRET_KEY)
-                       
+
     path_filename = "photos/" + filename
     print(path_filename)
-    s3.upload_file(filenameWithPath, BUCKET_NAME, path_filename)  
-    s3.put_object_acl(ACL='public-read', 
+    s3.upload_file(filenameWithPath, BUCKET_NAME, path_filename)
+    s3.put_object_acl(ACL='public-read',
                 Bucket=BUCKET_NAME, Key=path_filename)
-    return "http://"+BUCKET_NAME+".s3.amazonaws.com/"+ path_filename  
+    return "http://"+BUCKET_NAME+".s3.amazonaws.com/"+ path_filename
+
 
 def is_logged_in():
     return 'username' in session
 
+
 def get_username():
     return session['username']
+
 
 @app.route('/', methods=['GET', 'POST'])
 def home_page():
@@ -138,51 +145,62 @@ def home_page():
 
     return render_template('index.html', metadata=categories_list, logged_in=logged_in)
 
-@app.route('/<int:sectionID>/<int:categoryID>', methods=['GET'])
-def category_page(sectionID, categoryID):
+
+@app.route('/<int:section_id>/<int:category_id>', methods=['GET'])
+def category_page(section_id: int, category_id: int):
     logged_in = is_logged_in()
 
-    cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM metadata WHERE SectionID=%s AND CategoryID=%s", (sectionID, categoryID))
-    metadata = cursor.fetchone()
+    metadata = get_metadata(section_id, category_id)
     section_name = metadata[2]
     category_name = metadata[3]
 
-    cursor.execute("SELECT * FROM items WHERE SectionID=%s AND CategoryID=%s", (sectionID, categoryID))
-    items = cursor.fetchall()
-    cursor.close()
+    items = get_category_items(section_id, category_id)
 
-    return render_template('items.html', metadata=metadata, section_name=section_name, category_name=category_name, items=items, logged_in=logged_in)
+    return render_template('items.html', metadata=metadata, section_name=section_name, category_name=category_name,
+                           items=items, logged_in=logged_in)
 
-def get_metadata(sectionID: int, categoryID: int):
+
+def get_metadata(section_id: int, category_id: int):
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM metadata WHERE SectionID=%s AND CategoryID=%s", (sectionID, categoryID))
+    cursor.execute("SELECT * FROM metadata WHERE SectionID=%s AND CategoryID=%s", (section_id, category_id))
     metadata = cursor.fetchone()
     cursor.close()
     return metadata
 
-def get_item(itemID):
+
+def get_category_items(section_id: int, category_id: int):
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT * FROM items WHERE itemID=%s", (itemID,))
+    cursor.execute("SELECT * FROM items WHERE SectionID=%s AND CategoryID=%s", (section_id, category_id))
+    items = cursor.fetchall()
+    cursor.close()
+    return items
+
+
+def get_item(item_id: int):
+    cursor = mysql.connection.cursor()
+    cursor.execute("SELECT * FROM items WHERE itemID=%s", (item_id,))
     item = cursor.fetchone()
     cursor.close()
     return item
 
-@app.route('/<int:sectionID>/<int:categoryID>/<int:itemID>', methods=['GET'])
-def item_page(sectionID, categoryID, itemID):
+
+@app.route('/<int:section_id>/<int:category_id>/<int:item_id>', methods=['GET'])
+def item_page(section_id: int, category_id: int, item_id: int):
     logged_in = is_logged_in()
 
-    metadata = get_metadata(sectionID, categoryID)
+    metadata = get_metadata(section_id, category_id)
     section_name = metadata[2]
     category_name = metadata[3]
-    
-    item = get_item(itemID)
+
+    item = get_item(item_id)
 
     item_slots = item[7:]
     metadata_slots = metadata[4:]
     slots = list(zip(metadata_slots, item_slots))
 
-    return render_template('item.html', section_name=section_name, category_name=category_name, item=item, slots=slots, logged_in=logged_in)
+    return render_template('item.html', section_name=section_name, category_name=category_name, item=item, slots=slots,
+                           logged_in=logged_in)
+
 
 @app.route('/create', methods=['GET', 'POST'])
 def create_item():
@@ -200,7 +218,7 @@ def create_item():
 
     metadata = get_metadata(sid, cid)
 
-    if request.method == 'POST':    
+    if request.method == 'POST':
         file = request.files['imagefile']
         title = request.form['title']
         description = request.form['description']
@@ -209,15 +227,14 @@ def create_item():
         # Upload file if exists
         if file and allowed_file(file.filename):
             filename = file.filename
-            filenameWithPath = os.path.join(UPLOAD_FOLDER, filename)
-            print(filenameWithPath)
-            file.save(filenameWithPath)
+            filename_with_path = os.path.join(UPLOAD_FOLDER, filename)
+            file.save(filename_with_path)
 
-            uploadedFileURL = s3uploading(filename, filenameWithPath)
+            uploaded_file_url = s3uploading(filename, filename_with_path)
         else:
-            uploadedFileURL = ''
-        
-        insert_into_items((cid, sid, uploadedFileURL, get_username(), title, description, *slots))
+            uploaded_file_url = ''
+
+        insert_into_items((cid, sid, uploaded_file_url, get_username(), title, description, *slots))
 
         # TODO redirect to item
         return redirect(f'/{sid}/{cid}')
@@ -227,9 +244,10 @@ def create_item():
 
 @app.route('/search', methods=['GET'])
 def search_page():
-    query = request.args.get('query', None)    
-    
-    # response = photo_collection.find({"$or": [{"Title": {"$regex": query, "$options" : "i"}}, {'Description': {"$regex": query, "$options" : "i"}}, {'Tags': {"$regex": query, "$options" : "i"}}]})
+    query = request.args.get('query', None)
+
+    # response = photo_collection.find({"$or": [{"Title": {"$regex": query, "$options" : "i"}}, {'Description': {
+    # "$regex": query, "$options" : "i"}}, {'Tags': {"$regex": query, "$options" : "i"}}]})
     items = [item for item in []]
 
     return render_template('search.html', photos=items, searchquery=query)
@@ -240,7 +258,7 @@ def login_page():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        
+
         response = user_collection.find_one({'username': username})
         item = response
         if item:
@@ -253,10 +271,11 @@ def login_page():
                 return render_template('login.html', message="Error: Incorrect Password")
         else:
             return render_template('login.html', message="Error: Username does not exist")
-    
+
     message = request.args.get('message', None)
 
     return render_template('login.html', message=message)
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup_page():
@@ -270,7 +289,7 @@ def signup_page():
         user_already_exists = True if item else False
         if user_already_exists:
             return render_template('signup.html', message='Error: User already exists')
-        
+
         user_collection.insert_one({
                     "username": username,
                     "password": password
@@ -281,10 +300,12 @@ def signup_page():
 
     return render_template('signup.html')
 
+
 @app.route("/logout")
 def logout():
     del session['username']
     return redirect("/")
+
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port=5001)
