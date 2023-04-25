@@ -115,9 +115,9 @@ metadata_items = {
     FOR_SALE: [
         (FOR_SALE, CELL_PHONE, FOR_SALE_NAME, CELL_PHONE_NAME, 'Manufacturer', 'Model', 'Color', 'Storage', 'RAM', 'Carrier', 'Condition', 'Price'),
         (FOR_SALE, APPLIANCES, FOR_SALE_NAME, APPLIANCES_NAME, 'Type', 'Manufacturer', 'Power Consumption', 'Model Version', 'Price', 'Condition', 'Warranty Included', 'Appearance'),
-        # Auto Parts
+        (FOR_SALE, AUTOPARTS, FOR_SALE_NAME, AUTOPARTS_NAME, 'Manufacturer', 'Model', 'Condition', 'Type', 'Fits', 'Dimensions', 'Color', 'Price'),
         (FOR_SALE, BOOKS, FOR_SALE_NAME, BOOKS_NAME, 'Name', 'Author', 'Page Count', 'ISBN', 'Condition', 'Format', 'Publisher', 'Price'),
-        # Furniture
+        (FOR_SALE, FURNITURE, FOR_SALE_NAME, FURNITURE_NAME, 'Type', 'Manufacturer', 'Condition', 'Dimensions', 'Color', 'Weight', 'Material', 'Price'),
     ],
     HOUSING: [
         (HOUSING, HOUSE_SWAP, HOUSING_NAME, HOUSE_SWAP_NAME, 'Address', 'Square Ft', 'Pet Friendly', 'Storage', 'Smoking Friendly', 'AC', 'Apartment', 'Washer/Dryer'),
