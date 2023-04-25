@@ -57,9 +57,9 @@ RETAIL = '4'; RETAIL_NAME = 'Retail'
 # Community
 COMMUNITY_NAME = 'Community'
 EVENTS = '0'; EVENTS_NAME = 'Events'
-CONNECTIONS = '1'; CONNECTIONS_NAME = 'Connections'
+LOST_FOUND = '1'; LOST_FOUND_NAME = 'Lost + Found'
 PETS = '2'; PETS_NAME = 'Pets'
-LOCALNEWS = '3'; LOCALNEWS_NAME = 'Local News'
+MUSICIANS = '3'; MUSICIANS_NAME = 'Musicians'
 VOLUNTEERS = '4'; VOLUNTEERS_NAME = 'Volunteers'
 
 insert_metadata = f"""INSERT INTO metadata
@@ -142,10 +142,10 @@ metadata_items = {
     ],
     COMMUNITY: [
         (COMMUNITY, EVENTS, COMMUNITY_NAME, EVENTS_NAME, 'Address', 'Date', 'Type', 'Time', 'Adult Price', 'Child Price', 'Food/Drink', 'Venue'),
-        # Connections
+        (COMMUNITY, LOST_FOUND, COMMUNITY_NAME, LOST_FOUND_NAME, 'Item Name', 'Item Color', 'Item Size', 'Last Location', 'In Possession', 'Date and Time Lost/Found', 'Phone Number', 'Reward'),
         (COMMUNITY, PETS, COMMUNITY_NAME, PETS_NAME, 'Animal', 'Age', 'Spayed/Neutered', 'Vaccinated', 'Color', 'Count', 'Good With Kids', 'Price'),
-        # Local news
-        # Volunteers
+        (COMMUNITY, MUSICIANS, COMMUNITY_NAME, MUSICIANS_NAME, 'Location', 'Instrument(s)', 'Genre', 'Website', 'Gig', 'Venue', 'Day', 'Age Range'),
+        (COMMUNITY, VOLUNTEERS, COMMUNITY_NAME, VOLUNTEERS_NAME, 'Task', 'Date', 'Time', 'Location', 'Age Requirement', 'Website', 'Duties', 'Recurring'),
     ]
 }
 
