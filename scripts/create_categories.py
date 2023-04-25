@@ -15,16 +15,47 @@ cursor = db.cursor()
 cursor.execute('USE project4database;')
 cursor.connection.commit()
 
+# Sections
 FOR_SALE = '0'
-FOR_SALE_NAME = 'For Sale'
 HOUSING = '1'
+SERVICES = '2'
+JOBS = '3'
+COMMUNITY = '4'
+
+# For Sale
+FOR_SALE_NAME = 'For Sale'
+CELL_PHONE = '0'; CELL_PHONE_NAME = 'Cell Phones'
+APPLIANCES = '1'; APPLIANCES_NAME = 'Appliances'
+AUTOPARTS = '2'; AUTOPARTS_NAME = 'Auto Parts'
+BOOKS = '3'; BOOKS_NAME = 'Books'
+FURNITURE = '4'; FURNITURE_NAME = 'Furniture'
+
+# Housing
 HOUSING_NAME = 'Housing'
-HOUSE_SWAP = '0'
-HOUSE_SWAP_NAME = 'House Swap'
-CELL_PHONE = '0'
-CELL_PHONE_NAME = 'Cell Phones'
-APPLIANCES = '1'
-APPLIANCES_NAME = 'Appliances'
+HOUSE_SWAP = '0'; HOUSE_SWAP_NAME = 'House Swap'
+ROOMS_WANTED = '1'; ROOMS_WANTED_NAME = 'Rooms Wanted'
+COMMERCIAL = '2'; COMMERCIAL_NAME = 'Commercial'
+STORAGE = '3'; STORAGE_NAME = 'Storage'
+SUBLETS = '4'; SUBLETS_NAME = 'Sublets'
+
+# Services
+SERVICES_NAME = 'Services'
+AUTOMOTIVE = '0'; AUTOMOTIVE_NAME = 'Automotive'
+LESSONS_TUTORING = '1'; LESSONS_TUTORING_NAME = 'Lessons/Tutoring'
+TRANSPORTATION = '2'; TRANSPORTATION_NAME = 'Transportation'
+LANDSCAPING = '3'; LANDSCAPING_NAME = 'Landscaping'
+LEGAL = '4'; LEGAL_NAME = 'Legal'
+
+# Jobs
+JOBS_NAME = 'Jobs'
+FINANCE = '0'; FINANCE_NAME = 'Finance'
+REAL_ESTATE = '1'; REAL_ESTATE_NAME = 'Real Estate'
+EDUCATION = '2'; EDUCATION_NAME = 'Education'
+SOFTWARE = '3'; SOFTWARE_NAME = 'Software'
+MISCELLANEOUS = '4'; MISCELLANEOUS_NAME = 'Miscellaneous'
+
+# Community
+COMMUNITY_NAME = 'Community'
 
 insert_metadata = f"""INSERT INTO metadata
 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
@@ -78,10 +109,38 @@ def insert_into_items(values: tuple[Union[str, int], ...]):
 metadata_items = {
     FOR_SALE: [
         (FOR_SALE, CELL_PHONE, FOR_SALE_NAME, CELL_PHONE_NAME, 'Manufacturer', 'Model', 'Color', 'Storage', 'RAM', 'Carrier', 'Condition', 'Price'),
-        (FOR_SALE, APPLIANCES, FOR_SALE_NAME, APPLIANCES_NAME, 'Type', 'Manufacturer', 'Power Consumption', 'Model Version', 'Price', 'Condition', 'Warranty Included', 'Appearance')
+        (FOR_SALE, APPLIANCES, FOR_SALE_NAME, APPLIANCES_NAME, 'Type', 'Manufacturer', 'Power Consumption', 'Model Version', 'Price', 'Condition', 'Warranty Included', 'Appearance'),
+        # Auto Parts
+        (FOR_SALE, BOOKS, FOR_SALE_NAME, BOOKS_NAME, 'Name', 'Author', 'Page Count', 'ISBN', 'Condition', 'Format', 'Publisher', 'Price'),
+        # Furniture
     ],
     HOUSING: [
-        (HOUSING, HOUSE_SWAP, HOUSING_NAME, HOUSE_SWAP_NAME, 'Address', 'Square Ft', 'Pet Friendly', 'Storage', 'Smoking Friendly', 'AC', 'Apartment', 'Washer/Dryer')
+        (HOUSING, HOUSE_SWAP, HOUSING_NAME, HOUSE_SWAP_NAME, 'Address', 'Square Ft', 'Pet Friendly', 'Storage', 'Smoking Friendly', 'AC', 'Apartment', 'Washer/Dryer'),
+        # Rooms Wanted
+        # Commercial
+        # Storage
+        # Sublets
+    ],
+    SERVICES: [
+        # Automotive
+        # Lessons/Tutoring
+        # Transportation
+        # Landscaping
+        # Legal
+    ],
+    JOBS: [
+        # Finance
+        # Real Estate
+        # Education
+        (JOBS, SOFTWARE, JOBS_NAME, SOFTWARE_NAME, 'Company Name', 'Employment Type', 'Job Title', 'Compensation', 'Benefits', 'Skills/Languages', 'PTO', 'Clearances/Requirements')
+        # Miscellaneous
+    ],
+    COMMUNITY: [
+        # Events
+        # Connections
+        # Pets
+        # Local news
+        # Volunteers
     ]
 }
 

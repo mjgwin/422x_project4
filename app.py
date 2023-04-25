@@ -31,7 +31,6 @@ import os
 import boto3
 import pymongo
 from flask_mysqldb import MySQL
-import exifread
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -103,20 +102,6 @@ VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
 def inject_enumerate():
     return dict(enumerate=enumerate)
 
-def getExifData(path_name):
-    with open(path_name, 'rb') as f:
-        tags = exifread.process_file(f)
-
-    ExifData={}
-    for tag in tags.keys():
-        if tag not in ('JPEGThumbnail', 
-                        'TIFFThumbnail', 
-                        'Filename', 
-                        'EXIF MakerNote'):            
-            key=f"{tag}"
-            val=f"{tags[tag]}"
-            ExifData[key]=val
-    return ExifData
 
 def s3uploading(filename, filenameWithPath):
     s3 = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY,
