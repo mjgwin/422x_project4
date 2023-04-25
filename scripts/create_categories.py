@@ -120,18 +120,18 @@ metadata_items = {
         (FOR_SALE, FURNITURE, FOR_SALE_NAME, FURNITURE_NAME, 'Type', 'Manufacturer', 'Condition', 'Dimensions', 'Color', 'Weight', 'Material', 'Price'),
     ],
     HOUSING: [
-        (HOUSING, HOUSE_SWAP, HOUSING_NAME, HOUSE_SWAP_NAME, 'Address', 'Square Ft', 'Pet Friendly', 'Storage', 'Smoking Friendly', 'AC', 'Apartment', 'Washer/Dryer'),
-        # Rooms Wanted
-        # Commercial
-        # Storage
-        # Sublets
+        (HOUSING, HOUSE_SWAP, HOUSING_NAME, HOUSE_SWAP_NAME, 'Address', 'Square Feet', 'Pet Friendly', 'Storage', 'Smoking Friendly', 'AC', 'Apartment', 'Washer/Dryer'),
+        (HOUSING, ROOMS_WANTED, HOUSING_NAME, ROOMS_WANTED_NAME, 'Address', 'Price', 'Square Feet', 'Max Occupancy', 'Pet Friendly', 'Kitchen Access', 'Smoking Friendly', 'Garage'),
+        (HOUSING, COMMERCIAL, HOUSING_NAME, COMMERCIAL_NAME, 'Lease Rate', 'Lease Terms', 'Address', 'Square Feet', 'Contact Info', 'AC', 'Mail Service', 'Amenities'),
+        (HOUSING, STORAGE, HOUSING_NAME, STORAGE_NAME, 'Price', 'Address', 'Smoke Free', 'Square Feet', 'Climate Controlled', 'Vehicle Storage', 'Security', 'Moving Assistance Provided'),
+        (HOUSING, SUBLETS, HOUSING_NAME, SUBLETS_NAME, 'Address', 'Price', 'Square Feet', 'Washer/Dryer', 'Furnished', 'Pet Friendly', 'Smoking Friendly', 'Garage'),
     ],
     SERVICES: [
-        # Automotive
-        # Lessons/Tutoring
-        # Transportation
-        # Landscaping
-        # Legal
+        (SERVICES, AUTOMOTIVE, SERVICES_NAME, AUTOMOTIVE_NAME, 'Service Type', 'Certified', 'Insured', 'Address', 'Price', 'Contact Info', 'Payment Types', 'Willing to Travel'),
+        (SERVICES, LESSONS_TUTORING, SERVICES_NAME, LESSONS_TUTORING_NAME, 'Service Type', 'Experience Level', 'Address', 'Price', 'Contact Info', 'Delivery Method', 'Willing to Travel', 'Certified'),
+        (SERVICES, TRANSPORTATION, SERVICES_NAME, TRANSPORTATION_NAME, 'Type', 'Price', 'Distance Range', 'Contact Info', 'Storage Capacity', 'Passenger Capacity', 'Payments Accepted', 'Years Experience'),
+        (SERVICES, LANDSCAPING, SERVICES_NAME, LANDSCAPING_NAME, 'Type', 'Contact Info', 'Tools Required', 'Distance Range', 'Price', 'Payments Accepted', 'Free Estimates', 'Years Experience'),
+        (SERVICES, LEGAL, SERVICES_NAME, LEGAL_NAME, 'Type', 'Contact Info', 'Address', 'Price', 'Years Experience', 'Certifications', 'Free Consultation', 'Website'),
     ],
     JOBS: [
         (JOBS, FINANCE, JOBS_NAME, FINANCE_NAME, 'Employer Name', 'Employment Type', 'Job Title', 'Compensation', 'Address', 'Benefits', 'Responsibilities', 'Years Experience'),
