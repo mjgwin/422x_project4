@@ -79,7 +79,7 @@ def inject_enumerate():
     return dict(enumerate=enumerate)
 
 
-def insert_into_items(values: tuple[Union[str, int], ...]):
+def insert_into_items(values: tuple[Union[str, int], ...]) -> int:
     insert_item = f"""INSERT INTO items(
     SectionID,
     CategoryID,
@@ -103,8 +103,9 @@ VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
         cursor.execute(insert_item, values)
     except Exception as e:
         print(f"Failed to insert into item, error: {str(e)}")
-        return
+        return -1
     cursor.connection.commit()
+    return cursor.lastrowid
 
 
 def s3uploading(filename, filenameWithPath):
@@ -112,7 +113,6 @@ def s3uploading(filename, filenameWithPath):
                             aws_secret_access_key=AWS_SECRET_KEY)
 
     path_filename = "photos/" + filename
-    print(path_filename)
     s3.upload_file(filenameWithPath, BUCKET_NAME, path_filename)
     s3.put_object_acl(ACL='public-read',
                 Bucket=BUCKET_NAME, Key=path_filename)
@@ -211,8 +211,8 @@ def item_page(section_id: int, category_id: int, item_id: int):
     metadata_slots = metadata[4:]
     slots = list(zip(metadata_slots, item_slots))
 
-    return render_template('item.html', section_name=section_name, category_name=category_name, item=item, slots=slots,
-                           logged_in=logged_in)
+    return render_template('item.html', section_name=section_name, category_name=category_name, item=item, 
+                            section_id=section_id, category_id=category_id, slots=slots, logged_in=logged_in)
 
 
 @app.route('/create', methods=['GET', 'POST'])
@@ -240,10 +240,14 @@ def create_item():
         else:
             uploaded_file_url = ''
 
-        insert_into_items((cid, sid, uploaded_file_url, get_username(), title, description, *slots))
+        new_item_id = insert_into_items((sid, cid, uploaded_file_url, get_username(), title, description, *slots))
 
-        # TODO redirect to item
-        return redirect(f'/{sid}/{cid}')
+        if new_item_id == -1:
+            # Error
+            return redirect(f'/{sid}/{cid}')
+
+        # Redirect to item
+        return redirect(f'/{sid}/{cid}/{new_item_id}')
     else:
         metadata = get_metadata(sid, cid)
         return render_template('create.html', metadata=metadata, logged_in=True)

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ section_name }} > {{ category_name }}
+Item
 {% endblock %}
 
 {% block content %}
@@ -11,6 +11,11 @@
         <div style="display: flex; flex-direction: column; flex: 1;">
             <img style="width: 400px; height: 300px; object-fit: contain;" src="{{ item[3] }}" onerror="this.src='https\://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg'" />
             <p>Posted by: {{ item[4] }}</p>
+            <p>Posted in: 
+                <a href="/{{ section_id }}/{{ category_id }}">
+                    {{ section_name }} > {{ category_name }}
+                </a>
+            </p>
             <h2>Description:</h2>
             <p>
                {{ item[6] }}
