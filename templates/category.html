@@ -14,9 +14,9 @@ Category: {{ section_name }} > {{ category_name }}
     <br>
     {% endif %}
     {% if items|length == 0 %}
-    <p>No items to display</p>
+    <p>No listings to display</p>
     {% else %}
-    <p>Items: {{ items|length }}</p>
+    <p>Listings: {{ items|length }}</p>
     <div style="display: grid; grid-template-columns: auto auto auto;">
         {% for item in items %}
         <div>
