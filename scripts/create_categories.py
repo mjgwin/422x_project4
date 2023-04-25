@@ -155,13 +155,16 @@ for metadata_array in metadata_items.values():
         insert_into_metadata(metadata_item)
 
 
-items = [
-    (FOR_SALE, CELL_PHONE, 'https://project-four-photo-storage.s3.amazonaws.com/iphone14problack.jpg', 'se422x', 'iPhone 14 Space Gray 256GB', 'do NOT contact me with unsolicited services or offers', 'Apple', 'iPhone 14', 'Space Gray', '256GB', '8GB', 'Verizon', 'Used', '$300')
-]
-
-clear_items()
-for items in items:
-    insert_into_items(items)
+# Insert items on frontend
+# items = [
+#     (FOR_SALE, CELL_PHONE, 'https://project-four-photo-storage.s3.amazonaws.com/iphone14problack.jpg', 'se422x', 'iPhone 14 Space Gray 256GB', 'do NOT contact me with unsolicited services or offers', 'Apple', 'iPhone 14', 'Space Gray', '256GB', '8GB', 'Verizon', 'Used', '$700'),
+#     (FOR_SALE, CELL_PHONE, 'https://project-four-photo-storage.s3.amazonaws.com/samsung-galaxy-s22-ultra-3-1644951721.jpg', 'se422x', 'Samsung S22 Ultra like new', 'do NOT contact me with unsolicited services or offers', 'Samsung', 'S22 Ultra', 'Black', '128GB', '12GB', 'Unlocked', 'Like New', '$500'),
+#     (FOR_SALE, CELL_PHONE, 'https://project-four-photo-storage.s3.amazonaws.com/iphone14problack.jpg', 'se422x', 'iPhone 14 Space Gray 256GB', 'do NOT contact me with unsolicited services or offers', 'Apple', 'iPhone 14', 'Space Gray', '256GB', '8GB', 'Verizon', 'Used', '$300'),
+# ]
+#
+# clear_items()
+# for items in items:
+#     insert_into_items(items)
 
 cursor.execute('SELECT * from metadata;')
 res = cursor.fetchall()
