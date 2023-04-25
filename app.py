@@ -127,37 +127,28 @@ def get_username():
     return session['username']
 
 
-@app.route('/', methods=['GET', 'POST'])
-def home_page():
-    logged_in = is_logged_in()
+def get_query_section_category():
+    sid = request.args.get('sid')
+    cid = request.args.get('cid')
 
-    cursor = mysql.connection.cursor()
-    cursor.execute('SELECT * FROM metadata;')
-    items = cursor.fetchall()
-    cursor.close()
+    if sid is None or cid is None:
+        return -1, -1, redirect('/')
 
-    categories_list = dict()
-    for item in items:
-        if not item[2] in categories_list:
-            categories_list[item[2]] = []
+    sid = int(sid)
+    cid = int(cid)
 
-        categories_list[item[2]].append(item)
-
-    return render_template('index.html', metadata=categories_list, logged_in=logged_in)
+    return sid, cid, None
 
 
-@app.route('/<int:section_id>/<int:category_id>', methods=['GET'])
-def category_page(section_id: int, category_id: int):
-    logged_in = is_logged_in()
+def get_query_item():
+    iid = request.args.get('iid')
 
-    metadata = get_metadata(section_id, category_id)
-    section_name = metadata[2]
-    category_name = metadata[3]
+    if iid is None:
+        return -1, redirect('/')
 
-    items = get_category_items(section_id, category_id)
+    iid = int(iid)
 
-    return render_template('items.html', metadata=metadata, section_name=section_name, category_name=category_name,
-                           items=items, logged_in=logged_in)
+    return iid, None
 
 
 def get_metadata(section_id: int, category_id: int):
@@ -184,15 +175,53 @@ def get_item(item_id: int):
     return item
 
 
-@app.route('/<int:section_id>/<int:category_id>/<int:item_id>', methods=['GET'])
-def item_page(section_id: int, category_id: int, item_id: int):
+@app.route('/', methods=['GET', 'POST'])
+def home_page():
     logged_in = is_logged_in()
 
-    metadata = get_metadata(section_id, category_id)
+    cursor = mysql.connection.cursor()
+    cursor.execute('SELECT * FROM metadata;')
+    items = cursor.fetchall()
+    cursor.close()
+
+    categories_list = dict()
+    for item in items:
+        if not item[2] in categories_list:
+            categories_list[item[2]] = []
+
+        categories_list[item[2]].append(item)
+
+    return render_template('index.html', metadata=categories_list, logged_in=logged_in)
+
+
+@app.route('/category', methods=['GET'])
+def category_page():
+    logged_in = is_logged_in()
+
+    sid, cid, err = get_query_section_category()
+    if err is not None:
+        return err
+
+    metadata = get_metadata(sid, cid)
     section_name = metadata[2]
     category_name = metadata[3]
 
+    items = get_category_items(sid, cid)
+
+    return render_template('category.html', metadata=metadata, section_name=section_name, category_name=category_name,
+                           items=items, logged_in=logged_in)
+
+
+@app.route('/item/<int:item_id>', methods=['GET'])
+def item_page(item_id: int):
+    logged_in = is_logged_in()
+
     item = get_item(item_id)
+
+    section_id, category_id = item[1], item[2]
+    metadata = get_metadata(section_id, category_id)
+    section_name = metadata[2]
+    category_name = metadata[3]
 
     item_slots = item[7:]
     metadata_slots = metadata[4:]
@@ -207,16 +236,9 @@ def create_item():
     if not is_logged_in():
         return redirect(url_for('login_page'))
 
-    sid = request.args.get('sid')
-    cid = request.args.get('cid')
-
-    if sid is None or cid is None:
-        return redirect('/')
-
-    sid = int(sid)
-    cid = int(cid)
-
-    metadata = get_metadata(sid, cid)
+    sid, cid, err = get_query_section_category()
+    if err is not None:
+        return err
 
     if request.method == 'POST':
         file = request.files['imagefile']
@@ -239,6 +261,7 @@ def create_item():
         # TODO redirect to item
         return redirect(f'/{sid}/{cid}')
     else:
+        metadata = get_metadata(sid, cid)
         return render_template('create-item.html', metadata=metadata, logged_in=True)
 
 
@@ -308,4 +331,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", port=5001)
+    app.run(debug=True, host="0.0.0.0", port=4999)

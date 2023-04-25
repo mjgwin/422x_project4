@@ -13,7 +13,7 @@ Project 4
             <ul>
                 {% for section_item in section_items %}
                     <li>
-                        <a href="/{{ section_item[0] }}/{{ section_item[1] }}">{{ section_item[3] }}</a>
+                        <a href="/category?sid={{ section_item[0] }}&cid={{ section_item[1] }}">{{ section_item[3] }}</a>
                     </li>
                 {% endfor %}
             </ul>
