@@ -5,18 +5,20 @@ Project 4
 {% endblock %}
 
 {% block content %}
-<div>
-    {% for section_id, section_items in metadata.items() %}
-    <div>
-        <p>{{ section_id }}</p>
-        <ul>
-            {% for section_item in section_items %}
-                <li>
-                    <a href="/{{ section_item[0] }}/{{ section_item[1] }}">{{ section_item[3] }}</a>
-                </li>
-            {% endfor %}
-        </ul>
+<div style="display: flex; flex-direction: row; justify-content: center;">
+    <div style="width: 70vh; display: grid; grid-template-columns: auto auto auto; row-gap: 16px;">
+        {% for section_id, section_items in metadata.items() %}
+        <div>
+            <p style="text-align: center; text-decoration: underline;">{{ section_id }}</p>
+            <ul>
+                {% for section_item in section_items %}
+                    <li>
+                        <a href="/{{ section_item[0] }}/{{ section_item[1] }}">{{ section_item[3] }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 {% endblock %}
